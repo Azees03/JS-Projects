@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo App</title>
+</head>
+<body>
+    <div class="container">
+    <h2>Todo List</h2>
+    <input type="text" id="taskInput" placeholder="Enter a task" />
+    <button id="addTask">Add Task</button>
+    <ul id="taskList"></ul>
+  </div>
+
+<style>
+   body {
+    font-family: 'Segoe UI', sans-serif;
+  background-color: #f0f4f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.container{
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(120, 120, 120,0.5);
+    text-align: center;
+}
+
+input {
+    background-color: rgb(212, 212, 255);
+  border: 2px solid rgb(80, 80, 255);
+  border-radius: 7px;
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+button {
+  padding: 10px 20px;
+  margin:20px ;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#addTask:hover{
+    background-color: #e0e0e0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: #e0e0e0;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+</style>
+<script>
+let todos = [];
+const taskInput=document.getElementById("taskInput")
+const addbtn=document.getElementById("addTask")
+const taskList=document.getElementById("taskList")
+addbtn.addEventListener("click", ()=>{
+  const task=taskInput.value.trim()
+  if(task!=" "){
+    todos.push(task)
+    taskInput.value=""
+    renderList()
+  }
+});
+taskInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    const task = taskInput.value.trim();
+    if (task !== "") {
+      todos.push(task);
+      taskInput.value = "";
+      renderList();
+    }
+  }
+});
+
+function renderList(){
+  taskList.innerHTML=""
+  todos.forEach((task,index)=>{
+   const li=document.createElement("li")
+   li.innerHTML=`${task}
+   <button onclick="deleteTask(${index})">❌</button>`
+   taskList.appendChild(li)
+  }); 
+}
+function deleteTask(index){
+  todos.splice(index,1)
+  renderList()
+}
+</script>
+</body>
+</html>
