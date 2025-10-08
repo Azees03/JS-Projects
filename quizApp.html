@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz App</title>
+</head>
+<body>
+  <div class="quiz-container" id="quiz">
+    <h2 id="question">Question text here</h2>
+    <div class="answers">
+      <button class="answer-btn">Answer 1</button>
+      <button class="answer-btn">Answer 2</button>
+      <button class="answer-btn">Answer 3</button>
+      <button class="answer-btn">Answer 4</button>
+    </div>
+    <button id="next-btn">Next</button>
+  </div>
+<style>
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: azure;
+        font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+    .quiz-container{
+        background-color: aliceblue;
+        width: 400px;
+        padding: 20px 30px;
+        text-align: center;
+        box-shadow: 4px 4px 8px 4px rgba(144, 144, 144, 0.5);
+        border-radius: 10px;
+    }
+    h2{
+        margin-bottom: 20px;
+        color: #333;
+    }
+    .answer-btn{
+        font-weight: bold;
+        color: white;
+        display: block;
+        width: 100%;
+        padding: 10px 10px;
+        margin: 10px 0;
+        border: none;
+        background-color: rgb(105, 105, 255);
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .answer-btn:hover {
+    background-color: rgb(0, 0, 250);     /* darker blue on hover */
+    }
+
+#next-btn {
+  background-color: #28a745;     /* green button */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none;                 /* hidden until needed */
+}
+
+#next-btn:hover {
+  background-color: #218838;     /* darker green on hover */
+}
+</style>
+<script>
+    const quizData = [
+  {
+    question: "Which language runs in a web browser?",
+    answers: ["Java", "C", "Python", "JavaScript"],
+    correct: "JavaScript"
+  },
+  {
+    question: "What does CSS stand for?",
+    answers: ["Central Style Sheets", "Cascading Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"],
+    correct: "Cascading Style Sheets"
+  },
+  {
+    question: "What does HTML stand for?",
+    answers: ["Hypertext Markup Language", "Hyper Transfer Markup Language", "Home Tool Markup Language", "Hypertext Markdown Language"],
+    correct: "Hypertext Markup Language"
+  },
+  {
+    question: "What year was JavaScript launched?",
+    answers: ["1996", "1995", "1994", "none of the above"],
+    correct: "1995"
+  }
+];
+const questionE1 = document.getElementById("question");
+const answerBtns = document.querySelectorAll(".answer-btn");
+const nextBtn = document.getElementById("next-btn");
+const quizContainer = document.getElementById("quiz");
+let currenQuestionIndex=0;
+let score=0
+function loadQuestion(){
+    resetState()
+    const currenQuestion=quizData[currenQuestionIndex]
+    questionE1.textContent=currenQuestion.question
+
+    answerBtns.forEach((btn,index)=>{
+        btn.textContent=currenQuestion.answers[index]
+        btn.onclick=()=>selectedans(btn.textContent)
+    });
+}
+    function selectedans(selected){
+        const currenQuestion=quizData[currenQuestionIndex]
+        if(selected===currenQuestion.correct){
+            score++
+            alert("✅Correct Answer")
+        }else{
+            alert("❌Wrong Answer")
+        }
+        nextBtn.style.display="block"
+    }
+    function resetState(){
+        nextBtn.style.display="none"
+    }
+    nextBtn.addEventListener("click", ()=>{
+        currenQuestionIndex++
+        if(currenQuestionIndex<quizData.length) loadQuestion()
+        else showScore()
+    });
+    function showScore(){
+        quizContainer.innerHTML=`<h2>You Scored ${score} out of ${quizData.length}</h2>
+        <button onclick="location.reload()" style=>Play Again</button>  `;
+    }
+    loadQuestion()
+
+</script>
+</body>
+</html>
