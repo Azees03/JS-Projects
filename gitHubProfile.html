@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Profile</title>
+</head>
+<body class="dark">
+    <button id="butt">🌝Light Mode</button>
+    <div class="container">
+        <h2>👨‍💻GitHub Profile Viewer</h2>
+        <input type="text" placeholder="Enter GitHub Username" id="username">
+        <button id="btn">🔍Search</button>
+        <div id="profile"></div>
+    </div>
+    <style>
+        * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+h2{
+    color: white;
+}
+body {
+  font-family: "Poppins", sans-serif;
+  background: #0d1117;
+  color: #c9d1d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.container {
+  text-align: center;
+  width: 400px;
+  background: #161b22;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
+}
+
+.search-box {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+}
+
+#btn {
+  background: #238636;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#btn:hover {
+  background: #2ea043;
+}
+
+#profile img {
+  width: 120px;
+  border-radius: 50%;
+  margin-top: 15px;
+}
+
+.profile-card {
+  background: #21262d;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+.profile-card a {
+  color: white;
+  font-weight: bolder;
+  text-decoration: none;
+}
+
+.profile-card a:hover {
+  text-decoration: underline;
+}
+
+body.dark{
+    background-color: #21262d;
+    color: white;
+}
+body.light{
+    background-color: white;
+    color: #21262d;
+}
+#butt{
+   cursor: pointer;
+   position: absolute;
+   top: 160px;
+   padding: 10px;
+   border-radius: 8px;
+   color: black;
+   background-color: white;
+   font-weight: bolder;
+   border: 1px solid black;
+}
+</style>
+<script>
+    const input=document.getElementById("username")
+    const searchbtn=document.getElementById("btn")
+    const prfl=document.getElementById("profile")
+    searchbtn.addEventListener("click", getDetails)
+    async function getDetails(){
+        const uname=input.value.trim()
+        if(!uname){
+             prfl.innerHTML="Please Enter proper username"
+             return
+        }
+        const url=`https://api.github.com/users/${uname}`
+        try{
+            const response=await fetch(url)
+            if(!response.ok){
+                throw new Error("User not found")
+            }else{
+                const data=await response.json()
+                displayDetails(data)
+            }
+        }catch(error){
+           prfl.innerHTML = `<p>${error.message}</p>`
+        }
+    } 
+    function displayDetails(data){
+        const { avatar_url, name, bio, followers, following, public_repos, html_url } = data;
+        prfl.innerHTML = `
+    <div class="profile-card">
+      <img src="${avatar_url}" alt="${name}">
+      <h2>${name || "No Name"}</h2>
+      <p>${bio || "No bio available"}</p>
+      <p>👥 Followers: ${followers} | Following: ${following}</p>
+      <p>📦 Repositories: ${public_repos}</p>
+      <a href="${html_url}" target="_blank">View Profile on GitHub</a>
+    </div>
+  `;
+    }
+    input.addEventListener("keypress", (e)=>{
+        if(e.key="Enter") searchbtn.click()
+    });
+    const body = document.body;
+    const mode = document.getElementById("butt");
+
+mode.addEventListener("click", () => {
+  if (body.classList.contains("dark")) {
+    body.classList.replace("dark", "light");
+    mode.textContent = "🌚Dark Mode";
+  } else {
+    body.classList.replace("light", "dark");
+    mode.textContent = "🌝Light Mode";
+  }
+});
+
+</script>
+</body>
+</html>
