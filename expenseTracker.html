@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(120, 120, 120, 0.5);
+            text-align: center;
+            width: 320px;
+        }
+        input {
+            border: 2px solid rgb(147, 147, 255);
+            background-color: rgb(209, 209, 255);
+            padding: 13px;
+            border-radius: 10px;
+            width: 90%;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+            margin: 5px;
+        }
+        #income {
+            background-color: rgb(76, 255, 76);
+            transition: background-color 0.3s;
+        }
+        #income:hover {
+            background-color: rgb(149, 255, 150);
+        }
+        #expense {
+            background-color: rgb(255, 146, 146);
+            transition: background-color 0.3s;
+        }
+        #expense:hover {
+            background-color: rgb(255, 162, 162);
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
+        li {
+            background: #e0e0e0;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .income-item {
+            color: green;
+        }
+        .expense-item {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>💰Finance Tracker</h2>
+        <h2 id="total">🛄 Balance: ₹0</h2>
+        <input type="number" placeholder="Enter amount" id="inputText">
+        <button id="income">💵 Income</button>
+        <button id="expense">💸 Expense</button>
+        <p> id="message" style="color: red;"></p>
+        <ul id="expList"></ul>
+    </div>
+
+    <script>
+        const list = document.getElementById("expList");
+        let balance = 0;
+        let tracker = [];
+        const total = document.getElementById("total");
+        const input = document.getElementById("inputText");
+        const incomeBtn = document.getElementById("income");
+        const expenseBtn = document.getElementById("expense");
+        const message = document.getElementById("message");
+
+        incomeBtn.addEventListener("click", () => handleTransaction("Income"));
+        expenseBtn.addEventListener("click", () => handleTransaction("Expense"));
+
+        function handleTransaction(type) {
+            message.textContent = "";
+            const amount = Number(input.value.trim());
+
+            if (!amount || amount <= 0) {
+                message.textContent = "Enter a valid amount.";
+                return;
+            }
+            
+
+            if (type === "Expense" && amount > balance) {
+                message.textContent = "Insufficient balance.";
+                return;
+            }
+
+            if (type === "Income") balance += amount;
+            else balance -= amount;
+
+            tracker.push({ amount, type });
+            input.value = "";
+            updateUI();
+        }
+
+        function updateUI() {
+            total.textContent = `🛄 Balance: ₹${balance}`;
+            list.innerHTML = "";
+
+            tracker.forEach((item, index) => {
+                const li = document.createElement("li");
+                li.classList.add(item.type === "Income" ? "income-item" : "expense-item");
+                li.innerHTML = `
+                    ${item.type}: ₹${item.amount}
+                    <button onclick="deleteItem(${index})">❌</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function deleteItem(index) {
+            const item = tracker[index];
+            if (item.type === "Income") balance -= item.amount;
+            else balance += item.amount;
+            tracker.splice(index, 1);
+            updateUI();
+        }
+    </script>
+</body>
+</html>
